@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const adminRoutes = require("./routes/admin");
+const patientRoutes = require("./routes/patient");
 const envoiMail = require("./sendValidationMail");
 const cron = require("node-cron");
 require("dotenv").config();
@@ -26,11 +27,11 @@ app.use((error, req, res, next) => {
 
 //ici les routes
 app.use("/admin", adminRoutes);
+app.use(patientRoutes);
 
 cron.schedule("50 2 1 */3 *", () => {
   const mailer = envoiMail.envoi();
 });
-const mailer = envoiMail.envoi();
 
 mongoose.set("strictQuery", true);
 

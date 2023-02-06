@@ -1,5 +1,6 @@
 const Patient = require("../models/patient");
-const transporter = require("../mailTransporteurConfig");
+var generator = require("generate-password");
+const nodeMailer = require("nodemailer");
 
 exports.patientStatutEdit = async (req, res, next) => {
   const patientId = req.params.patientId;
@@ -38,20 +39,21 @@ exports.deletePatient = async (req, res, next) => {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    res.status(err.statusCode).json({ message: err.message });
   }
 };
 
 exports.addNewPatient = async (req, res, next) => {
-  const patientPrenom = req.body.patientPrenom;
-  const patientNom = req.body.patientNom;
-  const patientEmail = req.body.patientEmail;
-  const patientTel = req.body.patientTel;
-  const patientDateNaissance = req.body.patientDateNaissance;
-  const patientMotifPriseEnCharge = req.body.patientMotifPriseEnCharge;
-  const patientAdresse = req.body.patientAdresse;
-  const patientCodePostal = req.body.patientCodePostal;
-  const patientVille = req.body.patientVille;
+  const prenom = req.body.prenom;
+  const nom = req.body.nom;
+  const email = req.body.email;
+  const tel = req.body.tel;
+  const dateNaissance = req.body.dateNaissance;
+  const motifPriseEnCharge = req.body.motifPriseEnCharge;
+  const adresse = req.body.adresse;
+  const codePostal = req.body.codePostal;
+  const ville = req.body.ville;
+
   const patientPassword = generator.generate({
     length: 5,
     numbers: true,
@@ -59,21 +61,22 @@ exports.addNewPatient = async (req, res, next) => {
 
   try {
     const patient = new Patient({
-      prenom: patientPrenom,
-      nom: patientNom,
-      email: patientEmail,
-      tel: patientTel,
-      dateNaissance: patientDateNaissance,
-      motifPriseEnCharge: patientMotifPriseEnCharge,
-      adresse: patientAdresse,
-      codePostal: patientCodePostal,
-      ville: patientVille,
+      prenom: prenom,
+      nom: nom,
+      email: email,
+      tel: tel,
+      dateNaissance: dateNaissance,
+      motifPriseEnCharge: motifPriseEnCharge,
+      adresse: adresse,
+      codePostal: codePostal,
+      ville: ville,
       password: patientPassword,
+      statut: "valide",
     });
 
     await patient.save();
 
-    let transporter = nodeMailer.createTransport({
+    const transporter = nodeMailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
@@ -89,7 +92,7 @@ exports.addNewPatient = async (req, res, next) => {
       to: patient.email,
       subject: "Inscription Liste attente ortophoniste",
       text:
-        "Bonjour, votre inscription est validée. Votre code d'accés est" +
+        "Bonjour, votre inscription est validée. Votre code d'accés est " +
         patient.password +
         " ",
     };
