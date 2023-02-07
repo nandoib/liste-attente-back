@@ -5,6 +5,6 @@ const adminController = require("../controllers/adminController");
 const router = express.Router();
 
 router.post("/adminlogin", authController.adminLogin);
-router.get("/admin", adminController.getAllPatient);
+router.get("/allPatients", adminController.getAllPatient);
 router.post("/newAdmin", adminController.addAdmin);
 module.exports = router;
