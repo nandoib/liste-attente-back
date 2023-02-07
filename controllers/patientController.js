@@ -119,23 +119,22 @@ exports.patientEdit = async (req, res, next) => {
 
   //Validation
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error("validation failed");
-      error.statusCode = 422;
-      throw error;
-    }
+    //const errors = validationResult(req);
+    //if (!errors.isEmpty()) {
+    //const error = new Error("validation failed");
+    //error.statusCode = 422;
+    //throw error;
+    // }
 
-    const patientPrenom = req.body.patientPrenom;
-    const patientNom = req.body.patientNom;
-    const patientEmail = req.body.patientEmail;
-    const patientTel = req.body.patientTel;
-    const patientDateNaissance = req.body.patientDateNaissance;
-    const patientMotifPriseEnCharge = req.body.patientMotifPriseEnCharge;
-    const patientAdresse = req.body.patientAdresse;
-    const patientCodePostal = req.body.patientCodePostal;
-    const patientVille = req.body.patientVille;
-    const patientStatut = req.body.patientStatut;
+    const patientPrenom = req.body.prenom;
+    const patientNom = req.body.nom;
+    const patientEmail = req.body.email;
+    const patientTel = req.body.tel;
+    const patientDateNaissance = req.body.dateNaissance;
+    const patientMotifPriseEnCharge = req.body.motifPriseEnCharge;
+    const patientAdresse = req.body.adresse;
+    const patientCodePostal = req.body.codePostal;
+    const patientVille = req.body.ville;
 
     const patient = await Patient.findById(patientId);
     if (!patient) {
@@ -148,12 +147,12 @@ exports.patientEdit = async (req, res, next) => {
     patient.nom = patientNom;
     patient.email = patientEmail;
     patient.tel = patientTel;
-    patient.dateNaissance = patientDateNaissance;
+    patient.dateNaissance = patient.dateNaissance;
     patient.motifPriseEnCharge = patientMotifPriseEnCharge;
     patient.adresse = patientAdresse;
     patient.codePostal = patientCodePostal;
     patient.ville = patientVille;
-    patient.statut = patientStatut;
+    patient.statut = patient.statut;
 
     const result = await patient.save();
     res.status(200).json({ message: "patient mis a jour", patient: result });
