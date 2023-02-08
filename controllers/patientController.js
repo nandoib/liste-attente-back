@@ -6,7 +6,7 @@ exports.patientStatutEdit = async (req, res, next) => {
   const patientId = req.params.patientId;
 
   try {
-    const patientStatut = req.body.patientStatut;
+    const patientStatut = req.body.statut;
 
     const patient = await Patient.findById(patientId);
     if (!patient) {
@@ -18,6 +18,34 @@ exports.patientStatutEdit = async (req, res, next) => {
     patient.statut = patientStatut;
 
     const result = await patient.save();
+
+    if (patientStatut == "PEC") {
+      const transporter = nodeMailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        requireTLS: true,
+        auth: {
+          user: "nandoibba@gmail.com",
+          pass: process.env.GMAIL,
+        },
+      });
+
+      const mailMessage = {
+        from: "nandoibba@gmail.com ",
+        to: patient.email,
+        subject: "Votre prise en charge orthophonie ",
+        text: "Bonjour, bonne nouvelle, votre prise en charge est validée. Merci de remplir ce formulaire avant votre premier rendez-vous : <lien Formulaire>",
+      };
+      transporter.sendMail(mailMessage, function (error, data) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + data.response);
+        }
+      });
+    }
+
     res.status(200).json({ message: "patient mis a jour", patient: result });
   } catch (err) {
     if (!err.statusCode) {
@@ -160,7 +188,7 @@ exports.patientEdit = async (req, res, next) => {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    res.status(err.statusCode).json({ message: err.message });
   }
 };
 
@@ -183,6 +211,20 @@ exports.validateMail = async (req, res, next) => {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
-    next(err);
+    res.status(err.statusCode).json({ message: err.message });
+  }
+};
+
+exports.getPatient = async (req, res, next) => {
+  try {
+    const patientId = req.params.patientId;
+    const patient = await Patient.findById(patientId);
+
+    res.status(200).json({ message: "patient trouvé", patient: patient });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    res.status(err.statusCode).json({ message: err.message });
   }
 };

@@ -35,7 +35,7 @@ exports.patientlogin = (req, res, next) => {
           userId: loadedUser._id.toString(),
         },
         "secretsecretsecret",
-        { expiresIn: "10h" }
+        { expiresIn: "7d" }
       );
       res.status(200).json({
         message: "Vous êtes connecté",
@@ -76,17 +76,17 @@ exports.adminLogin = (req, res, next) => {
         throw error;
       }
 
-      const token = jsonwebtoken.sign(
+      const tokenAdmin = jsonwebtoken.sign(
         {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
-        "secretsecretsecret",
+        "secretsecretsecretadmin",
         { expiresIn: "10h" }
       );
       res.status(200).json({
         message: "Vous êtes connecté",
-        token: token,
+        tokenAdmin: tokenAdmin,
         userId: loadedUser._id.toString(),
       });
     })
