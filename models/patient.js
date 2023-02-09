@@ -44,6 +44,7 @@ const patientSchema = new Schema(
 
     prenom: { type: String, required: true },
     statut: { type: String, required: true },
+    rendezVous: [{ type: Date }],
   },
 
   { timestamps: true }

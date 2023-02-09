@@ -25,4 +25,10 @@ router.delete(
   patientController.deletePatient
 );
 
+router.post(
+  "/addRendezVous/:patientId",
+  isAuthAdmin,
+  adminController.addRendezvous
+);
+
 module.exports = router;

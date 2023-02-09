@@ -1,6 +1,8 @@
 const Patient = require("../models/patient");
 var generator = require("generate-password");
 const nodeMailer = require("nodemailer");
+const { body, validationResult } = require("express-validator");
+const cron = require("node-cron");
 
 exports.patientStatutEdit = async (req, res, next) => {
   const patientId = req.params.patientId;
@@ -88,6 +90,13 @@ exports.addNewPatient = async (req, res, next) => {
   });
 
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("Validation failed");
+      error.statusCode = 422;
+      error.data = errors.array()[0].msg;
+      throw error;
+    }
     const patient = new Patient({
       prenom: prenom,
       nom: nom,
@@ -136,6 +145,10 @@ exports.addNewPatient = async (req, res, next) => {
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
+    }
+
+    if (err.data) {
+      err.message = err.data;
     }
 
     res.status(err.statusCode).json({ message: err.message });

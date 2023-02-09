@@ -6,8 +6,19 @@ const adminController = require("../controllers/adminController");
 const patientController = require("../controllers/patientController");
 const patient = require("../models/patient");
 const router = express.Router();
+const { check, body } = require("express-validator");
 
-router.post("/newPatient", patientController.addNewPatient);
+router.post(
+  "/newPatient",
+  body("email").custom((value) => {
+    return patient.findOne({ email: value }).then((user) => {
+      if (user) {
+        return Promise.reject("Adresse mail déja utilisée");
+      }
+    });
+  }),
+  patientController.addNewPatient
+);
 
 router.delete(
   "/deletePatient/:patientId",
