@@ -29,6 +29,10 @@ app.use((error, req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use(patientRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hey this is my API running 🥳");
+});
+
 cron.schedule("50 2 1 */3 *", () => {
   const mailer = envoiMail.envoi();
 });
