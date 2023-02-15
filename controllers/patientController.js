@@ -3,6 +3,9 @@ var generator = require("generate-password");
 const nodeMailer = require("nodemailer");
 const { body, validationResult } = require("express-validator");
 const cron = require("node-cron");
+const patient = require("../models/patient");
+const hbs = require("nodemailer-express-handlebars");
+const path = require("path");
 
 exports.patientStatutEdit = async (req, res, next) => {
   const patientId = req.params.patientId;
@@ -238,6 +241,132 @@ exports.getPatient = async (req, res, next) => {
     if (!err.statusCode) {
       err.statusCode = 500;
     }
+    res.status(err.statusCode).json({ message: err.message });
+  }
+};
+
+exports.submitForm = async (req, res, next) => {
+  const patientId = req.params.patientId;
+  const activites = req.body.activites;
+  const agePremierMots = req.body.agePremierMots;
+  const agePremierPas = req.body.agePremierPas;
+  const ageProprete = req.body.ageProprete;
+  const autonome = req.body.autonome;
+  const classe = req.body.classe;
+  const comprehension = req.body.comprehension;
+  const difficultes = req.body.difficultes;
+  const ecole = req.body.ecole;
+  const ecoleVille = req.body.ecoleVille;
+  const expression = req.body.expression;
+  const hyper = req.body.hyper;
+  const lunettes = req.body.lunettes;
+  const numeroSecu = req.body.numeroSecu;
+  const pattes = req.body.pattes;
+  const peurs = req.body.peurs;
+  const rampage = req.body.rampage;
+  const relations = req.body.relations;
+  const repas = req.body.repas;
+  const sommeil = req.body.repas;
+  const suivis = req.body.suivis;
+  const testOrl = req.body.testOrl;
+
+  try {
+    const patient = await Patient.findById(patientId);
+
+    patient.formulaire = {};
+    patient.formulaire.activites = activites;
+    patient.formulaire.agePremierMots = agePremierMots;
+    patient.formulaire.agePremierPas = agePremierPas;
+    patient.formulaire.ageProprete = ageProprete;
+    patient.formulaire.autonome = autonome;
+    patient.formulaire.classe = classe;
+    patient.formulaire.comprehension = comprehension;
+    patient.formulaire.difficultes = difficultes;
+    patient.formulaire.ecole = ecole;
+    patient.formulaire.ecoleVille = ecoleVille;
+    patient.formulaire.expression = expression;
+    patient.formulaire.hyper = hyper;
+    patient.formulaire.lunettes = lunettes;
+    patient.formulaire.numeroSecu = numeroSecu;
+    patient.formulaire.pattes = pattes;
+    patient.formulaire.peurs = peurs;
+    patient.formulaire.rampage = rampage;
+    patient.formulaire.relations = relations;
+    patient.formulaire.repas = repas;
+    patient.formulaire.sommeil = sommeil;
+    patient.formulaire.suivis = suivis;
+    patient.formulaire.testOrl = testOrl;
+
+    const result = await patient.save();
+
+    const transporter = nodeMailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: "nandoibba@gmail.com",
+        pass: process.env.GMAIL,
+      },
+    });
+
+    // point to the template folder
+    const handlebarOptions = {
+      viewEngine: {
+        partialsDir: path.resolve("./views/"),
+        defaultLayout: false,
+      },
+      viewPath: path.resolve("./views/"),
+    };
+    // use a template file with nodemailer
+    transporter.use("compile", hbs(handlebarOptions));
+
+    const mailMessage = {
+      from: "nandoibba@gmail.com ",
+      to: "nandoibba@gmail.com",
+      subject: patient.nom + " " + patient.prenom + " a remplis le formulaire",
+      template: "formulaire",
+      context: {
+        patientNom: patient.nom,
+        patientPrenom: patient.prenom,
+        activites: activites,
+        agePremierMots: agePremierMots,
+        agePremierPas: agePremierPas,
+        ageProprete: ageProprete,
+        autonome: autonome,
+        classe: classe,
+        comprehension: comprehension,
+        difficultes: difficultes,
+        ecole: ecole,
+        ecoleVille: ecoleVille,
+        expression: expression,
+        hyper: hyper,
+        lunettes: lunettes,
+        numeroSecu: numeroSecu,
+        pattes: pattes,
+        peurs: peurs,
+        rampage: rampage,
+        relations: relations,
+        repas: repas,
+        sommeil: sommeil,
+        suivis: suivis,
+        testOrl: testOrl,
+      },
+    };
+    transporter.sendMail(mailMessage, function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + data.response);
+      }
+    });
+
+    res.status(200).json({ message: "Formulaire accepté", patient: result });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+
     res.status(err.statusCode).json({ message: err.message });
   }
 };

@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Formulaire orthophonie</title>
+  </head>
+  <style>
+    .mail{ display:flex; padding: 5%; } #h1{ text-align: center; }
+  </style>
+  <body>
+
+    <h1>{{patientPrenom}}
+      {{patientNom}}
+      a rempli le formulaire de prise en charge</h1>
+
+    <ul><li><b>n° de sécurité sociale :</b><br /> {{numeroSecu}}</li>
+      <li><b>Classe de l'enfant : </b><br />{{classe}}</li>
+      <li><b>Nom de l'école : </b><br />{{ecole}} de {{ecoleVille}}</li>
+      <li><b>difficultés rencontrés :</b><br /> {{difficultes}}</li>
+      <li><b>Autres suivis médicaux :</b><br /> {{suivis}}</li>
+      <li><b>Age des premiers mots :</b><br /> {{agePremierMots}}</li>
+      <li><b>L'enfant comprends bien :</b><br /> {{comprehension}}</li>
+      <li><b>L'enfant s'exprime beaucoup :</b><br /> {{expression}}</li>
+      <li><b>L'enfant a-t-il rampé :</b><br /> {{rampage}}</li>
+      <li><b>L'enfant a-t-il fait du 4 pattes :</b><br /> {{pattes}}</li>
+      <li><b>Age des premiers pas : </b> <br />{{agePremierPas}}</li>
+      <li><b>L'enfant est-t-il autonome :</b><br /> {{autonome}}</li>
+      <li><b>Port de lunettes :</b><br /> {{lunettes}}</li>
+      <li><b>Test ORL réalisé :</b><br /> {{testOrl}}</li>
+      <li><b>Hypersensibilité :</b><br /> {{hyper}}</li>
+      <li><b>Age propreté :</b><br /> {{ageProprete}}</li>
+      <li><b>Comment se passe les repas :</b><br /> {{repas}}</li>
+      <li><b>Comment se passe le temps du sommeil :</b><br /> {{sommeil}}</li>
+      <li><b>L'enfant a-t-il des peurs :</b><br /> {{peurs}}</li>
+      <li><b>Activités extra-scolaire / activités favorites :</b><br />
+        {{activites}}</li>
+      <li><b>Comment se passent les relations avec les autres : </b><br />
+        {{relations}}</li>
+    </ul>
+
+  </body>
+</html>
+
+activites: activites, agePremierMots: agePremierMots, agePremierPas:
+agePremierPas, ageProprete: ageProprete, autonome: autonome, classe: classe,
+comprehension: comprehension, difficultes: difficultes, ecole: ecole,
+ecoleVille: ecoleVille, expression: expression, hyper: hyper, lunettes:
+lunettes, numeroSecu: numeroSecu, pattes: pattes, peurs: peurs, rampage:
+rampage, relations: relations, repas: repas, sommeil: sommeil, suivis: suivis,
+testOrl: testOrl,

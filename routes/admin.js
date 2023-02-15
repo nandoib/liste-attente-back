@@ -31,4 +31,10 @@ router.post(
   adminController.addRendezvous
 );
 
+router.get(
+  "/allRendezVous/:patientId",
+  isAuthAdmin,
+  adminController.getAllRendezVousPatient
+);
+
 module.exports = router;

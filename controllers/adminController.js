@@ -124,3 +124,18 @@ exports.addRendezvous = async (req, res, next) => {
     res.status(err.statusCode).json({ message: err.message });
   }
 };
+
+exports.getAllRendezVousPatient = async (req, res, next) => {
+  try {
+    const patientId = req.params.patientId;
+
+    const patient = await Patient.findById(patientId);
+    const rendezVous = patient.rendezVous;
+
+    res.status(200).json({ rendezVous: rendezVous });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+  }
+};

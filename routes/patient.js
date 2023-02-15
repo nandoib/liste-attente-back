@@ -26,11 +26,12 @@ router.delete(
   patientController.deletePatient
 );
 
-router.post("/validerMail", isAuth, patientController.validateMail);
+router.post("/validerMail/:patientId", isAuth, patientController.validateMail);
 
 router.put("/editPatient/:patientId", isAuth, patientController.patientEdit);
 
 router.post("/patient/login", authController.patientlogin);
 router.get("/getPatient/:patientId", isAuth, patientController.getPatient);
+router.post("/submitForm/:patientId", isAuth, patientController.submitForm);
 
 module.exports = router;
