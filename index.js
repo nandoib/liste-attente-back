@@ -5,7 +5,6 @@ const adminRoutes = require("./routes/admin");
 const patientRoutes = require("./routes/patient");
 const envoiMail = require("./sendValidationMail");
 const cron = require("node-cron");
-require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.json());
